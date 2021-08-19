@@ -1,0 +1,28 @@
+{% extends 'blog/base.html' %}
+
+{% block main_content %}
+
+{% if latest_post_list %}
+    <ul>
+    {% for post in latest_post_list %}
+        <li>
+            <h4><a href="/blog/{{ post.id }}/">{{ post.post_title }} </a></h4>
+            by <a href="{% url 'accounts:profile' pk=post.post_author.pk %}">{{post.post_author}}</a>
+            <p>in <a href="{% url 'blog:category' post.category|slugify%}">{{post.category}}</a></p>
+
+            {{ post.snippet }}
+            <br/>
+            {% if post.header_image %}
+                <img src="{{post.header_image.url}}" class="img-fluid rounded-start" alt="..."  width="300">
+            {% endif %}
+
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No posts are available.</p>
+{% endif %}
+
+
+
+{% endblock %}

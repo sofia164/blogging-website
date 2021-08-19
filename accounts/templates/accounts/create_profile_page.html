@@ -1,0 +1,17 @@
+{% extends 'blog/base.html' %}
+{% block title %}Edit profile page{% endblock %}
+{% block main_content %}
+
+{% if user.is_authenticated %}
+        <h1>Edit profile page</h1>
+        <form method="POST" class="post-form" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+            <button class="btn btn-secondary">Save</button>
+        </form>
+{% else %}
+    <h>Error</h>
+
+{% endif %}
+{% endblock %}

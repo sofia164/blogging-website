@@ -1,0 +1,26 @@
+{% extends 'blog/base.html' %}
+
+{% block main_content %}
+
+{% if category_posts %}
+    <h1>{{ cats }}</h1>
+
+    <ul>
+    {% for post in category_posts %}
+        <li>
+                <a href="/blog/{{ post.id }}/">{{ post.post_title }} </a> by <a href="{% url 'accounts:profile' pk=post.post_author.pk %}">{{post.post_author}}</a>
+                <br/>
+                <br/>
+                {{ post.post_body|slice:":200"|safe }}
+                <br/>
+                <br/>
+            </li>
+    {% endfor %}
+    </ul>
+
+{% else %}
+<h2>Error. This page does not exist</h2>
+{% endif %}
+
+
+{% endblock %}

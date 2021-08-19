@@ -1,0 +1,118 @@
+
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block main_content %}
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<h1>{{ user.username }}</h1>
+
+{% if user.is_authenticated %}
+    {% if user == request.user %}
+        {%if user.profile %}
+            <li><a class="dropdown-item" href="{% url 'accounts:edit_profile_page'  user.profile.id%}">Edit profile page</a></li>
+        {% else %}
+            <li><a class="dropdown-item" href="{% url 'accounts:create_profile_page' %}">Create profile page</a></li>
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+<div class="card mb-3">
+  <div class="row g-0">
+    <div class="col-md-2">
+        {% if user.profile.profile_pic %}
+            <img src="{{user.profile.profile_pic.url}}" class="img-fluid rounded-start" alt="...">
+        {% else %}
+            <img src="{% static 'blog/images/default.png' %}" class="img-fluid rounded-start" alt="...">
+        {% endif %}
+    </div>
+    <div class="col-md-10">
+      <div class="card-body">
+        <h5 class="card-title">{{user.first_name}} {{user.last_name}}</h5>
+        <p class="small text-muted">
+            {% if user.profile.website_url%}
+                <a href="{{user.profile.website_url}}">Website </a>
+            {% endif %}
+            {% if user.profile.facebook_url%}
+                | <a href="{{user.profile.facebook_url}}">Facebook</a>
+            {% endif %}
+            {% if user.profile.twitter_url%}
+               | <a href="{{user.profile.twitter_url}}">Twitter</a>
+            {% endif %}
+             {% if user.profile.instagram_url%}
+               | <a href="{{user.profile.instagram_url}}">Instagram</a>
+            {% endif %}
+            {% if user.profile.pinterest_url%}
+               | <a href="{{user.profile.pinterest_url}}">Pinterest</a>
+            {% endif %}
+        </p>
+        <p class="card-text">{{user.profile.bio}}</p>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if user.is_authenticated %}
+    {% if user == request.user %}
+        <p>Change profile image</p>
+    {% endif %}
+{% endif %}
+
+{% if user.is_authenticated %}
+    {% if user != request.user %}
+        <p>Send a message</p>
+    {% endif %}
+{% endif %}
+
+{% if user.is_authenticated %}
+    {% if user != request.user %}
+        <p>Block this user</p>
+    {% endif %}
+{% endif %}
+
+<p>{{user.first_name}} {{user.last_name}}</p>
+<p>Date joined: {{user.date_joined}}</p>
+<p>Last login: {{user.last_login}}</p>
+<p>Country</p>
+
+<h5>Bio</h5>
+<p>{{user.profile.bio}} </p>
+
+<h5>Posts by <strong>{{ user.username }} </strong></h5>
+
+<ul>
+{% for post in user.post_set.all %}
+    <li><a href="{% url 'blog:detail' pk=post.pk %}">{{ post.post_title }}</a></li>
+{% endfor %}
+</ul>
+
+<p>View all (number)></p>
+
+<h5>Favorite posts</h5>
+<p>Post 1</p>
+<p>Post 2</p>
+<p>View all (number)></p>
+
+<h5>Answered questions</h5>
+<p>Question 1</p>
+<p>Question 2</p>
+<p>View all (number)></p>
+
+<h5>Friends</h5>
+{% if user.is_authenticated %}
+    {% if user != request.user %}
+        <p>+ Send a friend request</p>
+    {% endif %}
+{% endif %}
+<p>Friend 1</p>
+<p>Friend 2</p>
+<p>View all (number)></p>
+
+
+{% endblock %}
+
+

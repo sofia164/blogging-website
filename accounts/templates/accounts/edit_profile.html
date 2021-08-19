@@ -1,0 +1,17 @@
+{% extends 'blog/base.html' %}
+
+{% block main_content %}
+
+{% block title %}Settings{% endblock %}
+
+<h1>Settings</h1>
+
+
+<form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Update profile">
+</form>
+
+
+
+{% endblock %}
