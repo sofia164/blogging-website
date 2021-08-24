@@ -88,24 +88,31 @@
 </div>
 
 
-
-
-
-<hr>
-<h2>Comments</h2>
-
 {% if not post.comments.all %}
-    No comments yet <a href="#">Add one</a>
+    No comments yet <a href="{% url 'blog:comment_new' post.pk%}">Add one</a>
 {% else %}
-    <a href="#">Add comment</a>
+
+
     <br/>
+    <div class="media-list">
+        <h2>Comments ({{post.comments.all.count}})</h2>
+        <a href="{% url 'blog:comment_new' post.pk%}">Add a comment</a>
         {% for comment in post.comments.all %}
-            <strong>{{ comment.name }} -
-                {{comment.date_added}}</strong>
-            <br/>
-            {{ comment.body }}
-            <br/><br/>
-        {% endfor %}
+            <div>
+                {% if comment.name.profile.profile_pic %}
+                    <img src="{{comment.name.profile.profile_pic.url}}" width=70px height=60px alt="...">
+                {% else %}
+                    <img src="{% static 'blog/images/default.png' %}" width=70px height=60px alt="...">
+                {% endif %}
+                <strong>{{ comment.name }} -
+                    {{comment.date_added}}</strong>
+                <br/>
+                {{ comment.body }}
+                <br/><br/>
+            {% endfor %}
+            </div>
+
+    </div>    
 
 
     <br/><br/>

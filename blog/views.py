@@ -4,12 +4,12 @@ from django.utils import timezone
 # Create your views here.
 
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Post, Category
+from .models import Post, Category, Comment
 from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 from django.shortcuts import redirect
 from django.views.generic import DeleteView, CreateView, DetailView
 
@@ -33,7 +33,7 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """
-        Return the last five published posts (not including those set to be
+        Return the last published posts (not including those set to be
         published in the future).
         """
         return Post.objects.filter(
@@ -51,9 +51,10 @@ class ArticleDetailView(DetailView):
     template_name = 'blog/detail.html'
     model = Post
 
+
     def get_context_data(self, *args, **kwargs):
         cat_menu = Category.objects.all()
-        context = super(DetailView, self).get_context_data(*args, **kwargs)
+        context = super(ArticleDetailView, self).get_context_data(*args, **kwargs)
 
         stuff = get_object_or_404(Post, id=self.kwargs['pk'])
         total_likes = stuff.total_likes()
@@ -65,8 +66,24 @@ class ArticleDetailView(DetailView):
         context['cat_menu'] = cat_menu
         context['total_likes'] = total_likes
         context['liked'] = liked
+        
         return context
 
+
+class AddCommentView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_new.html'
+
+    def form_valid(self, form):
+        form.instance.name = self.request.user
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form)
+
+    def get_success_url(self):
+
+        return reverse_lazy('blog:detail', kwargs={'pk':self.kwargs['pk']})
+    
 
 
 
